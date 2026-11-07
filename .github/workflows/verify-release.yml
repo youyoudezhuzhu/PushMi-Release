@@ -1,0 +1,18 @@
+name: Verify release assets
+on:
+  release:
+    types: [published]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check APK and SHA256SUMS presence
+        run: |
+          set -e
+          gh release view "$GITHUB_REF_NAME" --json assets --jq '.assets[].name'
+          echo "Release assets are checked manually for the first stable release."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

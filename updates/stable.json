@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "channel": "stable",
+  "published": false,
+  "version_name": null,
+  "version_code": 0,
+  "apk_url": null,
+  "sha256": null,
+  "signer_sha256": "9f97b2e8c1d254dde1878b8448e6840dbe968d9cb4f6c04c5a6694493cf5a28b",
+  "release_notes": "尚未发布正式版本。",
+  "published_at": null
+}
