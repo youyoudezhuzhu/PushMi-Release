@@ -1,12 +1,13 @@
 {
   "schema_version": 1,
   "channel": "stable",
-  "published": false,
-  "version_name": null,
-  "version_code": 0,
-  "apk_url": null,
-  "sha256": null,
+  "published": true,
+  "version_name": "999.0.0",
+  "version_code": 999999,
+  "apk_url": "https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/v999.0.0-test/PushMi-v999.0.0-test.apk",
+  "sha256": "8a3f8eb7dd28043ac155a3790420ba08c6726f4657ab45545368b6d16bcd30df",
   "signer_sha256": "9f97b2e8c1d254dde1878b8448e6840dbe968d9cb4f6c04c5a6694493cf5a28b",
-  "release_notes": "尚未发布正式版本。",
-  "published_at": null
+  "release_notes": "测试专用：版本号极大、APK 为不可安装占位文件，仅用于验证更新检测/下载失败路径。不得作为正式版。",
+  "notes": "测试专用：版本号极大、APK 为不可安装占位文件，仅用于验证更新检测/下载失败路径。不得作为正式版。",
+  "published_at": "2026-11-07T10:50:00Z"
 }
