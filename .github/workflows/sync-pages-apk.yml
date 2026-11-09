@@ -42,6 +42,7 @@ jobs:
             tag="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq '.tagName')"
           fi
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json body --jq .body > /tmp/rel/notes.md 2>/dev/null || true
           gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name'
 
       - name: Download release manifest
@@ -75,7 +76,7 @@ jobs:
           cp "$got" "docs/dl/$apk_name"
           printf '%s  %s\n' "$SHA256" "$apk_name" > "docs/dl/SHA256SUMS-${VERSION}.txt"
 
-          python3 .github/scripts/patch_stable.py "$VERSION" "$VERSION_CODE" "$SHA256" "$TAG" "$apk_name" "${SOURCE_COMMIT:-}"
+          python3 .github/scripts/patch_stable.py "$VERSION" "$VERSION_CODE" "$SHA256" "$TAG" "$apk_name" "${SOURCE_COMMIT:-}" "$(cat /tmp/rel/notes.md 2>/dev/null || true)"
 
       - name: Commit and push
         run: |

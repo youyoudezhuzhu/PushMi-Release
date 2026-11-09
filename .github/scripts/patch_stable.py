@@ -4,6 +4,7 @@ import json
 import sys
 
 version, code, sha, tag, apk_name = sys.argv[1:6]
+notes = sys.argv[7] if len(sys.argv) > 7 else ""
 source_commit = sys.argv[6] if len(sys.argv) > 6 else ""
 base = "https://youyoudezhuzhu.github.io/PushMi-Release"
 patch = {
@@ -14,6 +15,9 @@ patch = {
     "apk_url": f"{base}/dl/{apk_name}",
     "apk_url_alt": f"https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/{tag}/{apk_name}",
 }
+if notes:
+    patch["release_notes"] = notes
+    patch["notes"] = notes
 for path in ("updates/stable.json", "docs/dl/stable.json"):
     try:
         data = json.load(open(path))
