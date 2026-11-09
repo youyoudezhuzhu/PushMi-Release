@@ -4,10 +4,11 @@
   "published": true,
   "version_name": "2.6.16",
   "version_code": 55,
-  "apk_url": "https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/v2.6.16/pushmi-2.6.16-release-signed.apk",
+  "apk_url": "https://youyoudezhuzhu.github.io/PushMi-Release/dl/pushmi-2.6.16-release-signed.apk",
   "sha256": "44045f8302778fcbfa98a537d300ab116d7c596bcc228379ac32d0b9911b0b21",
   "signer_sha256": "9f97b2e8c1d254dde1878b8448e6840dbe968d9cb4f6c04c5a6694493cf5a28b",
   "release_notes": "## PushMi 2.6.16\n\n延迟与音量修复：\n\n- 修复「延迟策略」改了没效果：低延迟 / 均衡 / 稳定 现在真正对应 0 / 120 / 300ms 的组播时间偏移，\n  低延迟档听感明显更跟手；多音箱仍使用完全一致的映射，同步不受影响。\n- 修复推送无声、测试音也无声：音箱被静音留在 0% 后新会话不会恢复。现在静音前保存恢复点、\n  取消静音不会停在 0、并在发现音箱为 0% 时自动恢复到 30%（用户自己设的 0 不会被覆盖）。\n\n稳定性修复：\n\n- 修复正式包点通知「控制」打开快捷控制闪退（release/R8 下 LocalLifecycleOwner 缺失）。\n- 快捷控制改为受限的原生底部窗口，点外部关闭后推送继续运行。\n\n界面：\n\n- 底部 Tab 与分段选择器切换加入动画，并保留各页面滚动位置。\n- 悬浮玻璃导航栏：真实背景采样/折射、按压抬升、边缘光学轮廓、选中气泡居中、图标清晰。\n- 分段胶囊去掉多余灰色水波纹；音箱页「扫描 / 添加」文字垂直居中，扫描动画不再压字。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的小米妙播（MiPlay）音箱。\n",
   "notes": "## PushMi 2.6.16\n\n延迟与音量修复：\n\n- 修复「延迟策略」改了没效果：低延迟 / 均衡 / 稳定 现在真正对应 0 / 120 / 300ms 的组播时间偏移，\n  低延迟档听感明显更跟手；多音箱仍使用完全一致的映射，同步不受影响。\n- 修复推送无声、测试音也无声：音箱被静音留在 0% 后新会话不会恢复。现在静音前保存恢复点、\n  取消静音不会停在 0、并在发现音箱为 0% 时自动恢复到 30%（用户自己设的 0 不会被覆盖）。\n\n稳定性修复：\n\n- 修复正式包点通知「控制」打开快捷控制闪退（release/R8 下 LocalLifecycleOwner 缺失）。\n- 快捷控制改为受限的原生底部窗口，点外部关闭后推送继续运行。\n\n界面：\n\n- 底部 Tab 与分段选择器切换加入动画，并保留各页面滚动位置。\n- 悬浮玻璃导航栏：真实背景采样/折射、按压抬升、边缘光学轮廓、选中气泡居中、图标清晰。\n- 分段胶囊去掉多余灰色水波纹；音箱页「扫描 / 添加」文字垂直居中，扫描动画不再压字。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的小米妙播（MiPlay）音箱。\n",
-  "published_at": "2026-11-09T07:50:00Z"
+  "published_at": "2026-11-09T07:50:00Z",
+  "apk_url_alt": "https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/v2.6.16/pushmi-2.6.16-release-signed.apk"
 }
