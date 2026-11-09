@@ -5,11 +5,11 @@
   "version_name": "2.6.17",
   "version_code": 56,
   "apk_url": "https://youyoudezhuzhu.github.io/PushMi-Release/dl/pushmi-2.6.17-release-signed.apk",
-  "sha256": "779002d57b21a20b34aecf9aaab529ed665cfb1548e5f262241d9e27ddc3d21c",
+  "sha256": "23d9125916a537221855b4a5ee561853c81943cd24752cc43cb99a21ce6afa14",
   "signer_sha256": "9f97b2e8c1d254dde1878b8448e6840dbe968d9cb4f6c04c5a6694493cf5a28b",
-  "release_notes": "## PushMi 2.6.17（重新构建）\n\n- 修复「检查更新 / 获取更新状态」慢：清单获取改为 **GitHub Pages 优先 + 并行竞速**，\n  单次超时 4s、整体上限 6s（旧逻辑串行试 5 个加速源，最坏约 88s）。\n- 诊断日志会记录实际来源与耗时，例如 `update: manifest from GitHub Pages in 480ms`。\n- 版本号保持 2.6.17 / versionCode 56，覆盖上一版资产。\n- 其余内容与 2.6.17 相同：Pages 下载、多镜像兜底、MiPlay 文案、采集模式副标题、关于页链接。",
-  "notes": "## PushMi 2.6.17（重新构建）\n\n- 修复「检查更新 / 获取更新状态」慢：清单获取改为 **GitHub Pages 优先 + 并行竞速**，\n  单次超时 4s、整体上限 6s（旧逻辑串行试 5 个加速源，最坏约 88s）。\n- 诊断日志会记录实际来源与耗时，例如 `update: manifest from GitHub Pages in 480ms`。\n- 版本号保持 2.6.17 / versionCode 56，覆盖上一版资产。\n- 其余内容与 2.6.17 相同：Pages 下载、多镜像兜底、MiPlay 文案、采集模式副标题、关于页链接。",
+  "release_notes": "## PushMi 2.6.17（重新构建）\n\n- 修复「检查更新」偶发失败/耗时长：清单获取改为 Pages 优先、并行竞速，并且**最快源一返回就结束**\n  （之前会等最慢的候选超时，实测 4.4s；现在约 0.5s）。\n- 单次请求 4s 超时，整体上限 6s；诊断日志记录来源与耗时。\n- 版本号保持 2.6.17 / versionCode 56，覆盖上一版资产。\n- 其余内容不变：Pages 下载、多镜像兜底、MiPlay 文案、采集模式副标题、关于页 GitHub 链接。",
+  "notes": "## PushMi 2.6.17（重新构建）\n\n- 修复「检查更新」偶发失败/耗时长：清单获取改为 Pages 优先、并行竞速，并且**最快源一返回就结束**\n  （之前会等最慢的候选超时，实测 4.4s；现在约 0.5s）。\n- 单次请求 4s 超时，整体上限 6s；诊断日志记录来源与耗时。\n- 版本号保持 2.6.17 / versionCode 56，覆盖上一版资产。\n- 其余内容不变：Pages 下载、多镜像兜底、MiPlay 文案、采集模式副标题、关于页 GitHub 链接。",
   "published_at": "2026-11-09T07:50:00Z",
   "apk_url_alt": "https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/v2.6.17/pushmi-2.6.17-release-signed.apk",
-  "source_commit": "900d8f90bf69460929f478358b478c216d5dd0e0"
+  "source_commit": "e12602a6c4023a31070993c2d80e51fa90fb2d98"
 }
