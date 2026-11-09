@@ -1,0 +1,92 @@
+name: Sync latest APK to GitHub Pages
+
+# Runs automatically whenever a stable release is published in this repository,
+# and can be re-run manually. Keeps exactly ONE APK in docs/dl so the Pages site
+# never piles up, and rewrites both stable.json copies the app reads.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to sync (defaults to the latest non-prerelease)
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-pages-apk
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.event_name == 'workflow_dispatch' || github.event.release.prerelease == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Resolve release tag
+        id: rel
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [ -n "${INPUT_TAG:-}" ]; then
+            tag="$INPUT_TAG"
+          else
+            tag="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq '.tagName')"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name'
+
+      - name: Download release manifest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.rel.outputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/rel
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" \
+            --pattern 'update-manifest.json' --dir /tmp/rel
+          python3 .github/scripts/write_meta.py /tmp/rel/update-manifest.json /tmp/rel/meta.env
+
+      - name: Sync APK into docs/dl
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.rel.outputs.tag }}
+        run: |
+          set -euo pipefail
+          source /tmp/rel/meta.env
+          apk_name="pushmi-${VERSION}-release-signed.apk"
+          mkdir -p docs/dl
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" \
+            --pattern 'pushmi-*-release-signed.apk' --dir /tmp/rel
+          got="$(find /tmp/rel -name 'pushmi-*-release-signed.apk' | head -1)"
+          echo "sha of asset: $(sha256sum "$got" | awk '{print $1}')"
+          echo "sha in manifest: $SHA256"
+          [ "$(sha256sum "$got" | awk '{print $1}')" = "$SHA256" ] || { echo "APK sha mismatch"; exit 1; }
+          find docs/dl -maxdepth 1 -type f -name 'pushmi-*-release-signed.apk' -delete
+          find docs/dl -maxdepth 1 -type f -name 'SHA256SUMS-*.txt' -delete
+          cp "$got" "docs/dl/$apk_name"
+          printf '%s  %s\n' "$SHA256" "$apk_name" > "docs/dl/SHA256SUMS-${VERSION}.txt"
+
+          python3 .github/scripts/patch_stable.py "$VERSION" "$VERSION_CODE" "$SHA256" "$TAG" "$apk_name"
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          source /tmp/rel/meta.env
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "already in sync"
+            exit 0
+          fi
+          git config user.name "PushMi Pages Bot"
+          git config user.email "pages-bot@pushmi.local"
+          git add docs/dl updates/stable.json
+          git commit -m "pages: sync ${VERSION} apk (auto)"
+          git push origin HEAD:main
