@@ -42,6 +42,7 @@ jobs:
             tag="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq '.tagName')"
           fi
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          mkdir -p /tmp/rel
           gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json body --jq .body > /tmp/rel/notes.md 2>/dev/null || true
           gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name'
 
