@@ -75,7 +75,7 @@ jobs:
           cp "$got" "docs/dl/$apk_name"
           printf '%s  %s\n' "$SHA256" "$apk_name" > "docs/dl/SHA256SUMS-${VERSION}.txt"
 
-          python3 .github/scripts/patch_stable.py "$VERSION" "$VERSION_CODE" "$SHA256" "$TAG" "$apk_name"
+          python3 .github/scripts/patch_stable.py "$VERSION" "$VERSION_CODE" "$SHA256" "$TAG" "$apk_name" "${SOURCE_COMMIT:-}"
 
       - name: Commit and push
         run: |

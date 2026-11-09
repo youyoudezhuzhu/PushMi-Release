@@ -4,8 +4,10 @@ import json
 import sys
 
 version, code, sha, tag, apk_name = sys.argv[1:6]
+source_commit = sys.argv[6] if len(sys.argv) > 6 else ""
 base = "https://youyoudezhuzhu.github.io/PushMi-Release"
 patch = {
+    "source_commit": source_commit,
     "version_name": version,
     "version_code": int(code),
     "sha256": sha,
