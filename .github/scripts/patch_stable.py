@@ -12,7 +12,8 @@ patch = {
     "version_name": version,
     "version_code": int(code),
     "sha256": sha,
-    "apk_url": f"{base}/dl/{apk_name}",
+    # 固定直链：Pages 上永远只有一份 latest.apk；?v=<code> 用于绕过 CDN 10 分钟缓存。
+    "apk_url": f"{base}/dl/latest.apk?v={int(code)}",
     "apk_url_alt": f"https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/{tag}/{apk_name}",
 }
 if notes:
