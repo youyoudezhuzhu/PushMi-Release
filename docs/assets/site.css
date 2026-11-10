@@ -111,7 +111,7 @@ h3 { font-size: 26px; line-height: 1.5; letter-spacing: -.7px; }
 .room-wave i:nth-child(3) { height: 15px; }
 .feature-footnote { display: block; font-size: 11px; color: var(--muted); }
 .feature-capture { display: flex; flex-direction: column; }
-.mode-art { display: flex; padding: 5px; background: #eff1f5; border: 1px solid #e9ecf2; border-radius: 100px; margin-block: auto 20px; transform: rotate(-3deg); }
+.mode-art { display: flex; padding: 5px; background: #eff1f5; border: 1px solid #e9ecf2; border-radius: 100px; margin-block: auto 20px; }
 .mode-art span { flex: 1; text-align: center; font-size: 13px; border-radius: 100px; padding: 15px 6px; color: var(--muted); }
 .mode-art .mode-active { background: #e0e5f2; color: var(--accent); box-shadow: 0 1px 2px #8a98bb08; }
 .feature-control { grid-column: 1 / -1; display: flex; align-items: center; gap: 24px; padding-block: 28px; }
