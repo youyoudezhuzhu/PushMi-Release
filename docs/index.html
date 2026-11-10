@@ -56,16 +56,24 @@
   .cta{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 18px}
   .meta{display:flex;gap:8px;flex-wrap:wrap}
   /* collage */
-  .collage{position:relative;height:390px}
+  .collage{position:relative;height:430px}
   .shot{
     position:absolute;border-radius:20px;overflow:hidden;background:#fff;
     border:1px solid rgba(255,255,255,.14);
     box-shadow:0 30px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04) inset;
   }
   .shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}
-  .shot.s1{width:252px;height:208px;left:0;top:78px;transform:rotate(-6deg);z-index:2}
-  .shot.s2{width:296px;height:244px;right:0;top:8px;transform:rotate(5deg);z-index:3}
-  .shot.s3{width:268px;height:243px;left:19%;bottom:8px;transform:rotate(-2deg);z-index:4}
+  .shot.s1{width:322px;height:265px;left:0;top:0;transform:rotate(-3deg);z-index:2}
+  .shot.s2{width:286px;height:178px;right:0;top:158px;transform:rotate(3deg);z-index:3}
+  .badge{
+    position:absolute;left:6%;bottom:6px;z-index:6;display:flex;align-items:center;gap:12px;
+    padding:14px 18px;border-radius:16px;background:rgba(13,18,34,.82);
+    border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);
+    box-shadow:0 18px 40px rgba(0,0,0,.5);
+  }
+  .badge b{display:block;font-size:14px}
+  .badge small{color:var(--muted);font-size:12px}
+  .badge .dot{width:9px;height:9px;flex:none}
   .phonebar{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:56px;height:6px;border-radius:6px;background:rgba(10,14,24,.55);z-index:5}
   /* sections */
   section{padding:64px 0}
@@ -89,7 +97,7 @@
     border:1px solid var(--line);border-radius:26px;padding:14px;transition:.25s transform,.25s box-shadow;
   }
   .frame:hover{transform:translateY(-6px);box-shadow:0 24px 50px rgba(0,0,0,.45)}
-  .frame .screen{border-radius:18px;overflow:hidden;background:#fff;border:1px solid rgba(0,0,0,.12);aspect-ratio:900/735}
+  .frame .screen{border-radius:18px;overflow:hidden;background:#fff;border:1px solid rgba(0,0,0,.12);aspect-ratio:900/700}
   .frame .screen img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
   .frame figcaption{margin:12px 4px 2px;color:var(--muted);font-size:13.5px}
   .frame b{color:var(--text);display:block;font-size:14.5px;margin-bottom:2px}
@@ -125,10 +133,12 @@
     .brand .chip{display:none}
     nav .btn.primary{padding:9px 14px;font-size:13.5px;white-space:nowrap}
     .hero{padding-top:26px;gap:26px}
-    .collage{height:270px;order:0}
-    .shot.s1{width:168px;height:139px;left:0;top:44px}
-    .shot.s2{width:196px;height:162px;right:0;top:0}
-    .shot.s3{width:176px;height:160px;left:20%;bottom:0}
+    .collage{height:268px;order:0}
+    .shot.s1{width:206px;height:169px;left:0;top:0}
+    .shot.s2{width:184px;height:115px;right:0;top:96px}
+    .badge{left:2%;bottom:0;padding:10px 12px;gap:9px}
+    .badge b{font-size:12.5px}
+    .badge small{font-size:11px}
     h1{font-size:34px}
     .cta{gap:10px}
     .cta .btn{flex:1 1 auto;justify-content:center}
@@ -178,9 +188,9 @@
         </div>
       </div>
       <div class="collage" aria-hidden="true">
-        <div class="shot s1"><img src="assets/shot-speakers.png" alt=""></div>
-        <div class="shot s2"><img src="assets/shot-home.png" alt=""></div>
-        <div class="shot s3"><img src="assets/shot-detail.png" alt=""></div>
+        <div class="shot s1"><img src="assets/shot-home.png" alt=""></div>
+        <div class="shot s2"><img src="assets/shot-speakers.png" alt=""></div>
+        <div class="badge"><span class="dot"></span><div><b>4 台音箱同时推送</b><small>同一时间线同步播放</small></div></div>
       </div>
     </div>
   </div>
