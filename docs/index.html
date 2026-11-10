@@ -3,33 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PushMi（推米）— 把手机的声音，直接推到音箱</title>
-<meta name="description" content="PushMi 把手机正在播放的音频通过局域网直接推送到一台或多台 MiPlay 音箱。多音箱同步、独立音量、通知快捷控制。">
+<title>PushMi（推米）— 非小米手机，也能把声音推给小爱音箱</title>
+<meta name="description" content="PushMi 用妙播（MiPlay）协议把任意安卓手机的声音直接推送到小爱音箱，不依赖 DLNA；音箱原声同步，无需手动校准延迟。">
 <link rel="icon" href="assets/icon.png">
 <style>
   :root{
-    --bg:#080b14; --bg2:#0d1222; --card:#111830; --card2:#0f1526;
+    --bg:#080b14; --card:#111830; --card2:#0f1526;
     --line:rgba(255,255,255,.08); --text:#e9eefb; --muted:#98a4c0;
     --a1:#7c5cff; --a2:#22d3ee; --a3:#f472b6; --ok:#34d399;
     --radius:22px;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{
-    margin:0;background:var(--bg);color:var(--text);
+  body{margin:0;background:var(--bg);color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-    -webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden;
-  }
+    -webkit-font-smoothing:antialiased;line-height:1.65;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-  /* ambient background */
   .glow{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
   .glow i{position:absolute;display:block;border-radius:50%;filter:blur(90px);opacity:.55}
   .glow i:nth-child(1){width:520px;height:520px;background:#7c5cff;top:-160px;left:-120px}
-  .glow i:nth-child(2){width:460px;height:460px;background:#22d3ee;top:120px;right:-160px;opacity:.35}
-  .glow i:nth-child(3){width:420px;height:420px;background:#f472b6;top:760px;left:38%;opacity:.18}
+  .glow i:nth-child(2){width:460px;height:460px;background:#22d3ee;top:120px;right:-160px;opacity:.32}
+  .glow i:nth-child(3){width:420px;height:420px;background:#f472b6;top:820px;left:40%;opacity:.16}
   main,header,footer{position:relative;z-index:1}
-  /* nav */
   header{position:sticky;top:0;backdrop-filter:blur(14px);background:rgba(8,11,20,.72);border-bottom:1px solid var(--line);z-index:20}
   nav{display:flex;align-items:center;gap:14px;height:66px}
   .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
@@ -38,118 +34,100 @@
   nav .spacer{flex:1}
   nav a.link{color:var(--muted);font-size:14px}
   nav a.link:hover{color:#fff}
-  .btn{
-    display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;
-    padding:12px 20px;border-radius:999px;border:1px solid transparent;transition:.2s transform,.2s box-shadow,.2s background;
-  }
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;padding:12px 20px;border-radius:999px;border:1px solid transparent;transition:.2s}
   .btn.primary{background:linear-gradient(135deg,var(--a1),#5b8cff 55%,var(--a2));color:#08111f;box-shadow:0 12px 34px rgba(91,140,255,.38)}
   .btn.primary:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(91,140,255,.5)}
   .btn.ghost{border-color:var(--line);color:var(--text);background:rgba(255,255,255,.03)}
   .btn.ghost:hover{background:rgba(255,255,255,.08)}
-  /* hero */
-  .hero{padding:72px 0 54px;display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .hero{padding:66px 0 46px;display:grid;grid-template-columns:1.02fr .98fr;gap:40px;align-items:center}
   .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:#bfe9ff;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);padding:6px 12px;border-radius:999px}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok)}
-  h1{font-size:clamp(34px,4.6vw,54px);line-height:1.15;margin:18px 0 14px;letter-spacing:-.5px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok);flex:none}
+  h1{font-size:clamp(32px,4.4vw,50px);line-height:1.16;margin:18px 0 14px;letter-spacing:-.5px}
   h1 span{background:linear-gradient(100deg,#9b8cff,#5b8cff 40%,#22d3ee 75%);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .lede{color:var(--muted);font-size:17px;max-width:33em}
-  .cta{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 18px}
+  .lede{color:var(--muted);font-size:16.5px;max-width:34em}
+  .lede b{color:#dbe4ff;font-weight:600}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0 16px}
   .meta{display:flex;gap:8px;flex-wrap:wrap}
-  /* collage */
-  .collage{position:relative;height:430px}
-  .shot{
-    position:absolute;border-radius:20px;overflow:hidden;background:#fff;
+  /* clean screenshot art (no device frames) */
+  .hero-art{position:relative;height:540px;display:flex;justify-content:center;align-items:flex-start}
+  .art{display:block;height:510px;width:auto;border-radius:18px;
     border:1px solid rgba(255,255,255,.14);
-    box-shadow:0 30px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04) inset;
-  }
-  .shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}
-  .shot.s1{width:322px;height:265px;left:0;top:0;transform:rotate(-3deg);z-index:2}
-  .shot.s2{width:286px;height:178px;right:0;top:158px;transform:rotate(3deg);z-index:3}
-  .badge{
-    position:absolute;left:6%;bottom:6px;z-index:6;display:flex;align-items:center;gap:12px;
-    padding:14px 18px;border-radius:16px;background:rgba(13,18,34,.82);
-    border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);
-    box-shadow:0 18px 40px rgba(0,0,0,.5);
-  }
-  .badge b{display:block;font-size:14px}
-  .badge small{color:var(--muted);font-size:12px}
-  .badge .dot{width:9px;height:9px;flex:none}
-  .phonebar{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:56px;height:6px;border-radius:6px;background:rgba(10,14,24,.55);z-index:5}
-  /* sections */
-  section{padding:64px 0}
+    box-shadow:0 30px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.04) inset;
+    background:#fff}
+  .art-back{height:430px;margin-top:64px;margin-left:-54px;transform:rotate(4deg);z-index:1;opacity:.95}
+  .art-front{position:relative;z-index:2;transform:rotate(-2deg)}
+  .floatbadge{position:absolute;left:-6px;bottom:2px;z-index:5;display:flex;align-items:center;gap:11px;
+    padding:13px 16px;border-radius:16px;background:rgba(13,18,34,.88);
+    border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);box-shadow:0 18px 40px rgba(0,0,0,.5)}
+  .floatbadge b{display:block;font-size:13.5px}
+  .floatbadge small{color:var(--muted);font-size:11.5px}
+  section{padding:60px 0}
   .kicker{color:var(--a2);font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
-  h2{font-size:clamp(26px,3vw,36px);margin:10px 0 10px;letter-spacing:-.3px}
-  .sub{color:var(--muted);max-width:44em}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
-  .card{
-    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
-    border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:.25s transform,.25s border-color,.25s background;
-  }
+  h2{font-size:clamp(25px,3vw,35px);margin:10px 0 10px;letter-spacing:-.3px}
+  .sub{color:var(--muted);max-width:46em}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:.25s}
   .card:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.45);background:linear-gradient(180deg,rgba(124,92,255,.12),rgba(255,255,255,.02))}
   .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(124,92,255,.28),rgba(34,211,238,.2));border:1px solid rgba(124,92,255,.35);margin-bottom:14px}
   .ico svg{width:22px;height:22px;stroke:#cfd8ff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .card h3{font-size:17px;margin:0 0 6px}
+  .card h3{font-size:16.5px;margin:0 0 6px}
   .card p{margin:0;color:var(--muted);font-size:14.5px}
-  /* gallery */
-  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
-  .frame{
-    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));
-    border:1px solid var(--line);border-radius:26px;padding:14px;transition:.25s transform,.25s box-shadow;
-  }
-  .frame:hover{transform:translateY(-6px);box-shadow:0 24px 50px rgba(0,0,0,.45)}
-  .frame .screen{border-radius:18px;overflow:hidden;background:#fff;border:1px solid rgba(0,0,0,.12);aspect-ratio:900/700}
-  .frame .screen img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
-  .frame figcaption{margin:12px 4px 2px;color:var(--muted);font-size:13.5px}
-  .frame b{color:var(--text);display:block;font-size:14.5px;margin-bottom:2px}
+  .card.hero-card{border-color:rgba(34,211,238,.35);background:linear-gradient(180deg,rgba(34,211,238,.12),rgba(255,255,255,.02))}
+  /* compare */
+  .compare{margin-top:26px;border:1px solid var(--line);border-radius:20px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line)}
+  thead th{background:rgba(255,255,255,.04);font-size:13.5px;color:var(--muted);font-weight:600}
+  tbody tr:last-child td{border-bottom:none}
+  td.bad{color:#ff9b9b}
+  td.good{color:#8ef0c4}
+  /* gallery: plain screenshots, rounded corners, no device frames */
+  .gallery{display:flex;gap:26px;justify-content:center;align-items:flex-start;margin-top:34px;flex-wrap:wrap}
+  figure.shot{margin:0;display:flex;flex-direction:column;align-items:center}
+  figure.shot img{display:block;height:520px;width:auto;border-radius:16px;
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 22px 50px rgba(0,0,0,.45);background:#fff}
+  figure.shot figcaption{margin:14px 2px 0;color:var(--muted);font-size:13px;text-align:center;max-width:280px}
+  figure.shot figcaption b{color:var(--text);display:block;font-size:14px;margin-bottom:2px}
   /* steps */
   .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px;counter-reset:s}
   .step{position:relative;padding:24px 22px 22px;border-radius:var(--radius);border:1px solid var(--line);background:var(--card2)}
   .step::before{counter-increment:s;content:"0" counter(s);position:absolute;top:14px;right:18px;font-weight:800;font-size:30px;color:rgba(124,92,255,.35)}
   .step h3{margin:0 0 6px;font-size:16px}
   .step p{margin:0;color:var(--muted);font-size:14px}
-  /* faq */
   details{border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:rgba(255,255,255,.025);margin-top:10px}
-  details summaries{display:block}
   summary{cursor:pointer;font-weight:600}
   details p{color:var(--muted);margin:8px 0 0;font-size:14.5px}
-  /* download band */
-  .band{
-    border-radius:28px;padding:40px;margin:20px 0 0;
-    background:linear-gradient(120deg,rgba(124,92,255,.22),rgba(34,211,238,.14)),var(--card);
-    border:1px solid rgba(124,92,255,.35);text-align:center;
-  }
+  .band{border-radius:28px;padding:40px;background:linear-gradient(120deg,rgba(124,92,255,.22),rgba(34,211,238,.14)),var(--card);border:1px solid rgba(124,92,255,.35);text-align:center}
   .band h2{margin:0 0 8px}
-  .band p{color:var(--muted);margin:0 auto 22px;max-width:40em}
+  .band p{color:var(--muted);margin:0 auto 20px;max-width:42em}
   .code{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:#bfe9ff;background:rgba(0,0,0,.35);border:1px solid var(--line);padding:7px 12px;border-radius:10px;word-break:break-all}
   footer{border-top:1px solid var(--line);padding:34px 0 46px;color:var(--muted);font-size:13.5px}
   footer .row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
-  footer a{color:#b9c6e6}
   footer a:hover{color:#fff}
   @media (max-width:760px){
     nav{height:58px;gap:8px}
     nav .link{display:none}
-    .brand{font-size:15px;gap:8px}
-    .brand img{width:26px;height:26px}
-    .brand .chip{display:none}
+    .brand{font-size:15px}.brand img{width:26px;height:26px}.brand .chip{display:none}
     nav .btn.primary{padding:9px 14px;font-size:13.5px;white-space:nowrap}
-    .hero{padding-top:26px;gap:26px}
-    .collage{height:268px;order:0}
-    .shot.s1{width:206px;height:169px;left:0;top:0}
-    .shot.s2{width:184px;height:115px;right:0;top:96px}
-    .badge{left:2%;bottom:0;padding:10px 12px;gap:9px}
-    .badge b{font-size:12.5px}
-    .badge small{font-size:11px}
-    h1{font-size:34px}
-    .cta{gap:10px}
+    .hero{padding-top:22px;gap:22px}
+    .hero-art{height:400px}
+    .art{height:380px}
+    .art-back{height:330px;right:2%;top:34px}
+    .floatbadge{left:0;bottom:-4px;padding:10px 12px}
+    .floatbadge b{font-size:12.5px}.floatbadge small{font-size:11px}
+    h1{font-size:33px}
     .cta .btn{flex:1 1 auto;justify-content:center}
+    .grid,.steps{grid-template-columns:1fr}
+    .gallery{gap:18px}
+    figure.shot img{height:380px}
+    figure.shot figcaption{max-width:78vw}
+    th,td{padding:11px 12px;font-size:13.5px}
   }
-  @media (max-width:900px){
-    .hero{grid-template-columns:1fr;padding-top:44px}
-    .collage{height:300px;order:-1}
-    .shot.s1{width:170px;height:140px;left:0;top:40px}
-    .shot.s2{width:196px;height:161px;right:0;top:0}
-    .shot.s3{width:176px;height:160px;left:22%;bottom:6px}
-    .grid,.gallery,.steps{grid-template-columns:1fr}
+  @media (max-width:900px) and (min-width:761px){
+    .hero{grid-template-columns:1fr;gap:26px}
+    .hero-art{order:-1;height:470px}
+    .grid{grid-template-columns:repeat(2,1fr)}
   }
 </style>
 </head>
@@ -161,110 +139,135 @@
     <nav>
       <a class="brand" href="./"><img src="assets/icon.png" alt="PushMi 图标">PushMi <span class="chip">推米</span></a>
       <span class="spacer"></span>
+      <a class="link" href="#why">为什么</a>
       <a class="link" href="#features">功能</a>
       <a class="link" href="#shots">截图</a>
-      <a class="link" href="#install">安装</a>
       <a class="btn primary" href="dl/latest.apk">下载最新版</a>
     </nav>
   </div>
 </header>
 
 <main>
+  <!-- hero -->
   <div class="wrap">
     <div class="hero">
       <div>
-        <span class="eyebrow"><span class="dot"></span>v2.6.18 · 稳定版 · 局域网直连</span>
-        <h1>把手机的声音，<br><span>直接推到音箱</span></h1>
-        <p class="lede">PushMi 通过局域网把手机正在播放的音乐、视频、游戏声音实时推送到一台或多台 MiPlay 音箱。多音箱同步、独立音量、通知栏快捷控制，不经过云端。</p>
+        <span class="eyebrow"><span class="dot"></span>v2.6.18 · 稳定版 · 妙播协议直连</span>
+        <h1>非小米手机，<br>也能推给<span>小爱音箱</span></h1>
+        <p class="lede">新款小爱音箱大多只支持<b>妙播（MiPlay）</b>、不再支持 DLNA，系统投屏经常找不到设备。<br>
+          PushMi 直接用妙播协议把手机声音送进音箱：<b>任意安卓手机都能用</b>，而且<b>音箱原声就是同步的，不用手动校准延迟</b>。</p>
         <div class="cta">
           <a class="btn primary" href="dl/latest.apk">⬇ 下载最新版 APK</a>
           <a class="btn ghost" href="https://github.com/youyoudezhuzhu/PushMi-Release">GitHub</a>
         </div>
         <div class="meta">
-          <span class="chip">Android 10+</span>
-          <span class="chip">局域网直连</span>
-          <span class="chip">多音箱同步</span>
-          <span class="chip">免费版 2 台</span>
+          <span class="chip">非小米手机可用</span>
+          <span class="chip">妙播协议直连</span>
+          <span class="chip">原声同步 · 免校准</span>
+          <span class="chip">局域网 · 不过云端</span>
         </div>
       </div>
-      <div class="collage" aria-hidden="true">
-        <div class="shot s1"><img src="assets/shot-home.png" alt=""></div>
-        <div class="shot s2"><img src="assets/shot-speakers.png" alt=""></div>
-        <div class="badge"><span class="dot"></span><div><b>4 台音箱同时推送</b><small>同一时间线同步播放</small></div></div>
+      <div class="hero-art" aria-hidden="true">
+        <img class="art art-back" src="assets/shot-detail.webp" alt="">
+        <img class="art art-front" src="assets/shot-speakers.webp" alt="PushMi 扫描到的小爱音箱列表">
+        <div class="floatbadge"><span class="dot"></span><div><b>扫到局域网里的小爱音箱</b><small>勾选后直接推送</small></div></div>
       </div>
     </div>
   </div>
 
+  <!-- why -->
+  <section id="why">
+    <div class="wrap">
+      <div class="kicker">Why PushMi</div>
+      <h2>为什么需要它</h2>
+      <p class="sub">小米手机有系统级妙播；第三方安卓手机没有。而新款小爱音箱又只认妙播、不认 DLNA——这块正好是空的。</p>
+      <div class="compare">
+        <table>
+          <thead><tr><th>场景</th><th>系统投屏 / DLNA</th><th>PushMi</th></tr></thead>
+          <tbody>
+            <tr><td>非小米安卓手机推小爱音箱</td><td class="bad">经常找不到设备</td><td class="good">任意安卓手机，装上就能用</td></tr>
+            <tr><td>新款小爱音箱</td><td class="bad">多数只支持妙播，DLNA 不可用</td><td class="good">原生妙播协议直连</td></tr>
+            <tr><td>多台音箱同时播放</td><td class="bad">常需手动校准延迟</td><td class="good">音箱原声同步，无需校准</td></tr>
+            <tr><td>数据路径</td><td>部分方案经云端</td><td class="good">局域网直连，不上传音频</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- features -->
   <section id="features">
     <div class="wrap">
       <div class="kicker">Features</div>
-      <h2>为「把声音推过去」而做</h2>
-      <p class="sub">不做音乐播放器，只做一件事：把手机里正在响的声音，稳定地送到音箱。</p>
+      <h2>把声音送过去，只做这一件事</h2>
+      <p class="sub">不替代音乐 App，不接管播放；手机里正在响的声音，原样送进音箱。</p>
       <div class="grid">
-        <div class="card">
-          <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12h2l2-6 3 12 3-9 2 5h4"/></svg></div>
-          <h3>实时系统音频捕获</h3>
-          <p>抓取手机正在播放的媒体音频，音乐、视频、游戏都适用；不录音、不上传。</p>
+        <div class="card hero-card">
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M9 6h6"/></svg></div>
+          <h3>非小米手机也能用</h3>
+          <p>不需要小米手机、不需要系统级妙播支持；任意 Android 10+ 手机安装即可推送给小爱音箱。</p>
+        </div>
+        <div class="card hero-card">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 16 0"/><path d="M7 12a5 5 0 0 1 10 0"/><circle cx="12" cy="15" r="2"/></svg></div>
+          <h3>妙播协议直连</h3>
+          <p>按 MiPlay 协议与音箱通信，不靠 DLNA「假装兼容」；新款只支持妙播的音箱也能正常推。</p>
+        </div>
+        <div class="card hero-card">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 12h3l2-5 3 10 3-8 2 3h3"/></svg></div>
+          <h3>原声同步，免校准</h3>
+          <p>妙播本身保证多音箱同步播放，不需要你手动量延迟、拖偏移；起播、暂停、恢复都对齐。</p>
         </div>
         <div class="card">
           <div class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="16" rx="2"/><rect x="13" y="4" width="7" height="16" rx="2"/></svg></div>
-          <h3>多音箱同步</h3>
-          <p>同一时间线推送到多台音箱，起播、暂停、恢复都对齐，不各播各的。</p>
+          <h3>多台音箱一起响</h3>
+          <p>一次推送到多台小爱音箱，同一时间线，不各播各的；每台还能单独调音量。</p>
         </div>
         <div class="card">
-          <div class="ico"><svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg></div>
-          <h3>独立音量与静音</h3>
-          <p>每台音箱单独调节音量，支持全部静音；拖动即时生效，不被状态回写打断。</p>
-        </div>
-        <div class="card">
-          <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M7 12h4"/><path d="M15 10v4"/><path d="M17 12h-4"/></svg></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M8 12h3"/><path d="M16 10v4"/></svg></div>
           <h3>通知栏快捷控制</h3>
           <p>常驻通知可直接暂停、停止、切换音箱；支持的机型显示实时通知（Android 16+ Live Updates）。</p>
         </div>
         <div class="card">
-          <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 8h14"/><path d="M7 8v8a5 5 0 0 0 10 0V8"/></svg></div>
-          <h3>延迟策略可调</h3>
-          <p>低延迟 / 均衡 / 稳定三档，真实对应 0 / 120 / 300ms 的播放偏移，弱网也能稳。</p>
-        </div>
-        <div class="card">
-          <div class="ico"><svg viewBox="0 0 24 24"><path d="m12 3 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.8l6.5-.9z"/></svg></div>
-          <h3>PushMi Plus</h3>
-          <p>解除同时推送数量限制，永久授权、绑定设备；离线也能继续使用已激活的权益。</p>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></div>
+          <h3>独立音量 · 弱网也稳</h3>
+          <p>每台音箱独立音量与全局静音；延迟策略三档可调，网络抖动时优先保稳定。</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- screenshots -->
   <section id="shots">
     <div class="wrap">
       <div class="kicker">Screenshots</div>
-      <h2>界面长这样</h2>
-      <p class="sub">全部取自真机截图（Samsung Galaxy Z Flip5 · Android 16）。</p>
+      <h2>扫一下，就能看到家里的小爱音箱</h2>
+      <p class="sub">真机截图（Samsung Galaxy Z Flip5 · Android 16）。局域网内的音箱会被列出来，勾选即可推送。</p>
       <div class="gallery">
-        <figure class="frame">
-          <div class="screen"><img src="assets/shot-home.png" alt="首页：开始推送与推送状态"></div>
-          <figcaption><b>首页</b>一键开始推送，实时显示连接与延迟</figcaption>
+        <figure class="shot">
+          <img src="assets/shot-speakers.webp" alt="音箱页：扫描并列出小爱音箱">
+          <figcaption><b>自动发现音箱</b>扫描局域网，列出可推送的小爱音箱</figcaption>
         </figure>
-        <figure class="frame">
-          <div class="screen"><img src="assets/shot-speakers.png" alt="音箱页：扫描与选择"></div>
-          <figcaption><b>音箱</b>扫描局域网，勾选要推送的音箱</figcaption>
+        <figure class="shot">
+          <img src="assets/shot-home.webp" alt="首页：推送中">
+          <figcaption><b>一键推送</b>开始后显示连接状态与实时统计</figcaption>
         </figure>
-        <figure class="frame">
-          <div class="screen"><img src="assets/shot-settings.png" alt="设置页：音质与延迟策略"></div>
-          <figcaption><b>设置</b>音质与延迟策略，一屏调好</figcaption>
+        <figure class="shot">
+          <img src="assets/shot-detail.webp" alt="推送详情：统计与控制">
+          <figcaption><b>实时可控</b>暂停、静音、停止，随时查看推送数据</figcaption>
         </figure>
       </div>
     </div>
   </section>
 
+  <!-- steps -->
   <section id="install">
     <div class="wrap">
       <div class="kicker">Get started</div>
       <h2>三步开始</h2>
       <div class="steps">
-        <div class="step"><h3>下载安装</h3><p>点击「下载最新版 APK」，允许浏览器安装未知来源应用即可。</p></div>
-        <div class="step"><h3>扫描并勾选音箱</h3><p>手机与音箱连同一个 Wi-Fi，在「音箱」页扫描并选择要推送的设备。</p></div>
-        <div class="step"><h3>开始推送</h3><p>回到首页点「开始推送」，随后在任何 App 里播放声音即可。</p></div>
+        <div class="step"><h3>下载安装</h3><p>下载 APK，允许浏览器安装未知来源应用即可。不需要小米账号。</p></div>
+        <div class="step"><h3>扫描并勾选音箱</h3><p>手机和小爱音箱连同一个 Wi-Fi，在「音箱」页扫描，勾选要推送的设备。</p></div>
+        <div class="step"><h3>开始推送</h3><p>回到首页点「开始推送」，之后在任何 App 里放声音，都会送到音箱。</p></div>
       </div>
     </div>
   </section>
@@ -275,7 +278,7 @@
         <h2>下载 PushMi</h2>
         <p>固定直链，永远指向最新稳定版；历史版本与校验值见 GitHub Releases。</p>
         <a class="btn primary" href="dl/latest.apk">⬇ 下载 latest.apk</a>
-        <p style="margin-top:18px"><span class="code" id="apkurl">https://youyoudezhuzhu.github.io/PushMi-Release/dl/latest.apk</span></p>
+        <p style="margin-top:18px"><span class="code">https://youyoudezhuzhu.github.io/PushMi-Release/dl/latest.apk</span></p>
       </div>
     </div>
   </section>
@@ -284,11 +287,12 @@
     <div class="wrap">
       <div class="kicker">FAQ</div>
       <h2>常见问题</h2>
-      <details open><summary>支持哪些音箱？</summary><p>支持 MiPlay / 小米妙播协议的音箱；不支持 AirPlay、蓝牙音箱或其它品牌设备。未测试机型不保证兼容。</p></details>
+      <details open><summary>需要小米手机吗？</summary><p>不需要。PushMi 自己实现妙播协议，任意 Android 10+ 手机都能用；小米手机也可以用。</p></details>
+      <details><summary>为什么不用 DLNA / 系统投屏？</summary><p>新款小爱音箱大多只支持妙播，不再支持 DLNA，所以系统投屏经常找不到设备。PushMi 直接用妙播协议，兼容性和原生妙播一致。</p></details>
+      <details><summary>多台音箱需要手动校准延迟吗？</summary><p>不需要。妙播协议本身保证多音箱同步，PushMi 不做额外延迟测量；设置里的延迟策略只是弱网时保稳定用的。</p></details>
+      <details><summary>支持哪些音箱？</summary><p>支持妙播 / 小米妙播协议的小爱音箱；不支持 AirPlay、蓝牙音箱或其它品牌设备。未测试机型不保证兼容。</p></details>
       <details><summary>需要联网吗？</summary><p>推送走局域网，不需要互联网。只有 Plus 授权、购买信息和更新检查需要联网。</p></details>
-      <details><summary>免费版有什么限制？</summary><p>免费版同时最多推送到 2 台音箱；Plus 解除数量限制，永久授权并绑定设备。</p></details>
-      <details><summary>怎么更新？</summary><p>App 内「设置 → 软件更新」可检查更新；也可以直接下载上面的固定直链覆盖安装，签名一致不会丢数据。</p></details>
-      <details><summary>和厂商有关系吗？</summary><p>PushMi 是独立开发的第三方应用，与小米公司无官方关联，MiPlay 为小米的协议名称。</p></details>
+      <details><summary>免费版有什么限制？</summary><p>免费版同时最多推送到 2 台音箱；PushMi Plus 解除数量限制。</p></details>
     </div>
   </section>
 </main>
@@ -301,7 +305,7 @@
       <a href="https://github.com/youyoudezhuzhu/PushMi-Release/issues">反馈</a>
       <a href="https://github.com/youyoudezhuzhu/PushMi-Release/blob/main/PRIVACY.md">隐私</a>
       <a href="https://github.com/youyoudezhuzhu/PushMi-Release/blob/main/NOTICE.md">专有软件声明</a>
-      <span class="spacer" style="flex:1"></span>
+      <span style="flex:1"></span>
       <span>与小米公司无官方关联</span>
     </div>
   </div>
