@@ -2,14 +2,14 @@
   "schema_version": 1,
   "channel": "stable",
   "published": true,
-  "version_name": "2.6.18",
-  "version_code": 59,
-  "apk_url": "https://youyoudezhuzhu.github.io/PushMi-Release/dl/latest.apk?v=59",
-  "sha256": "66afceade53fafd5324b526e7a29387a502287d7eb7bf7971d59306ff141f826",
+  "version_name": "2.6.19",
+  "version_code": 60,
+  "apk_url": "https://youyoudezhuzhu.github.io/PushMi-Release/dl/latest.apk?v=60",
+  "sha256": "98f3896bd9540d833994bffe959d6b711f6b5585ed52800ce9e9066a68a25964",
   "signer_sha256": "9f97b2e8c1d254dde1878b8448e6840dbe968d9cb4f6c04c5a6694493cf5a28b",
-  "release_notes": "## PushMi 2.6.18\n\n安全与稳定性修复：\n\n- 授权：裸 HTTP 403（WAF/反代）不再误删本地凭证；撤销按服务端显式 code 处理；\n  本地有效凭证每 24 小时后台复核一次，服务端撤销可最终生效；撤销清理异常安全；\n  「恢复授权」补上应用签名校验；内核拒绝凭证时界面自动降级为免费版。\n- 设备码：异常/占位 Android ID 不再生成可碰撞的共享设备码；设备码不可用时不再发起激活/恢复。\n- 设备码展示：界面与复制改为可逆编码 PVD1-…，降低截图/工单直接泄露真实设备码的风险（客服可还原）。\n- 更新：清单抓取逐跳 HTTPS 校验 + 256 KiB 上限；Release 构建不再可能编入测试授权公钥。\n- 购买信息：修复「暂未开放」一直不恢复的问题（304 响应且本地缓存过期时改为无条件重取）。\n- 凭证时钟容差由 5 分钟放宽到 24 小时，避免手机时钟不准导致合法授权激活失败。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的 MiPlay 音箱。",
-  "notes": "## PushMi 2.6.18\n\n安全与稳定性修复：\n\n- 授权：裸 HTTP 403（WAF/反代）不再误删本地凭证；撤销按服务端显式 code 处理；\n  本地有效凭证每 24 小时后台复核一次，服务端撤销可最终生效；撤销清理异常安全；\n  「恢复授权」补上应用签名校验；内核拒绝凭证时界面自动降级为免费版。\n- 设备码：异常/占位 Android ID 不再生成可碰撞的共享设备码；设备码不可用时不再发起激活/恢复。\n- 设备码展示：界面与复制改为可逆编码 PVD1-…，降低截图/工单直接泄露真实设备码的风险（客服可还原）。\n- 更新：清单抓取逐跳 HTTPS 校验 + 256 KiB 上限；Release 构建不再可能编入测试授权公钥。\n- 购买信息：修复「暂未开放」一直不恢复的问题（304 响应且本地缓存过期时改为无条件重取）。\n- 凭证时钟容差由 5 分钟放宽到 24 小时，避免手机时钟不准导致合法授权激活失败。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的 MiPlay 音箱。",
+  "release_notes": "## PushMi 2.6.19\n\n音频稳定性修复：\n\n- **修复灭屏/后台长时间推送时媒体时钟漂移**：播放捕获在屏幕关闭后可能静默少给帧，\n  之前会让音频时间线越推越落后（实测 2 分钟内累积到 4.6 秒且不恢复）。\n  现在会按墙钟补齐缺口（每 250ms 检查，缺口超过 85ms 才补，单次最多补 1 秒），\n  保证音箱时钟始终跟住实时音频。\n- 新增对应的单元测试与延迟分析文档。\n\n包含 2.6.18 的全部内容：安全专项修复（授权/设备码/更新/构建）、设备码展示改为可逆编码、\n购买信息 304 缓存修复、凭证时钟容差放宽。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的 MiPlay 音箱。",
+  "notes": "## PushMi 2.6.19\n\n音频稳定性修复：\n\n- **修复灭屏/后台长时间推送时媒体时钟漂移**：播放捕获在屏幕关闭后可能静默少给帧，\n  之前会让音频时间线越推越落后（实测 2 分钟内累积到 4.6 秒且不恢复）。\n  现在会按墙钟补齐缺口（每 250ms 检查，缺口超过 85ms 才补，单次最多补 1 秒），\n  保证音箱时钟始终跟住实时音频。\n- 新增对应的单元测试与延迟分析文档。\n\n包含 2.6.18 的全部内容：安全专项修复（授权/设备码/更新/构建）、设备码展示改为可逆编码、\n购买信息 304 缓存修复、凭证时钟容差放宽。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的 MiPlay 音箱。",
   "published_at": "2026-11-09T07:50:00Z",
-  "apk_url_alt": "https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/v2.6.18/pushmi-2.6.18-release-signed.apk",
-  "source_commit": "534ee3dc8b5bbbd9759f6a3270cd3138debdd5ed"
+  "apk_url_alt": "https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/v2.6.19/pushmi-2.6.19-release-signed.apk",
+  "source_commit": "e399d5dd70afc1ee0fc59b3cdc0c4d272cb36882"
 }
