@@ -1,0 +1,73 @@
+{
+  "result": "PASS",
+  "checks": [
+    {
+      "viewport": 320,
+      "overflow": false,
+      "version": true,
+      "download": true
+    },
+    {
+      "viewport": 360,
+      "overflow": false,
+      "version": true,
+      "download": true
+    },
+    {
+      "viewport": 390,
+      "overflow": false,
+      "version": true,
+      "download": true
+    },
+    {
+      "viewport": 640,
+      "overflow": false,
+      "version": true,
+      "download": true
+    },
+    {
+      "viewport": 768,
+      "overflow": false,
+      "version": true,
+      "download": true
+    },
+    {
+      "viewport": 1024,
+      "overflow": false,
+      "version": true,
+      "download": true
+    },
+    {
+      "viewport": 1440,
+      "overflow": false,
+      "version": true,
+      "download": true
+    },
+    {
+      "tabs": "three images, keyboard, selected state and panel label passed"
+    },
+    {
+      "faq": "native open/close passed"
+    },
+    {
+      "clipboard": "checksum copied successfully"
+    },
+    {
+      "download": "actual browser download SHA-256 matches manifest",
+      "bytes": 6031714
+    },
+    {
+      "manifestFailure": "fixed APK and GitHub fallback remain available"
+    },
+    {
+      "withoutJavaScript": "content and download remain available"
+    },
+    {
+      "reducedMotion": "no animated elements or smooth scrolling"
+    }
+  ],
+  "consoleErrors": [],
+  "failedResponses": [],
+  "basePath": "/PushMi-Release/",
+  "apkAndManifestsModified": false
+}
