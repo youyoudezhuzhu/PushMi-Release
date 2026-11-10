@@ -1,32 +1,27 @@
-# 下载页维护
+# 下载页与 Pages 部署
 
-GitHub Pages 沿用 `main` 分支 `/docs` 的静态发布方式，不需要前端构建工具。
+GitHub Pages 现在通过 **GitHub Actions artifact** 部署（Settings → Pages → Source: GitHub Actions），
+不再从 `main` 分支 `/docs` 静态发布。对应工作流 `.github/workflows/sync-pages-apk.yml`。
 
-- `docs/index.html`：页面内容、下载入口和截图预览。
-- `docs/assets/site.css`：浅灰底、蓝紫强调色、胶囊按钮及磨砂导航；含手机、平板和桌面布局，以及系统减少动画支持。
-- `docs/assets/site.js`：截图页签、键盘导航、版本清单读取与 SHA-256 复制。
-- 原有 `docs/assets/shot-*.webp` 和图标继续使用，没有重新生成或替换 App 截图。
+## 结构
+
+- `docs/index.html`、`docs/assets/*`：页面内容与静态资源（提交进 git）
+- `docs/dl/latest.apk`：**不提交进 git**，由工作流在部署时放进 artifact
+- `docs/dl/SHA256SUMS-<version>.txt`、`docs/dl/stable.json`、`updates/stable.json`：提交进 git（小文本）
+- `docs/PAGES-DEPLOY.md`：环境策略与排障（**必须包含 `v*` tag 策略**）
 
 ## 发新版时
 
-继续沿用现有发布与 APK 同步流程。网页从 `docs/dl/stable.json` 读取稳定版版本号、版本代码、镜像下载和 SHA-256；不需要在 HTML 中手动改版本。
+1. 在 Release 仓库发布正式版（非 prerelease）
+2. 工作流自动：下载 APK → 校验 SHA-256 → 写入 artifact 的 `docs/dl/latest.apk`
+   → 生成 `stable.json` / 校验文件并提交 → `upload-pages-artifact` → `deploy-pages`
+3. 旧 Release/tag 自动删除，只保留当前版本
 
-下载始终使用本站 `dl/latest.apk`，清单加载成功后只增加 `?v=<version_code>` 绕过旧包缓存。清单不可用或禁用 JavaScript 时，固定 APK 链接与 GitHub Releases 入口仍可用。SHA-256 未加载时复制按钮不可用，不展示过期校验值。
+网页从 `docs/dl/stable.json` 读取稳定版信息；下载固定走本站 `dl/latest.apk`，
+清单加载成功后加 `?v=<version_code>` 绕过缓存。清单不可用或禁用 JS 时，固定直链与 Releases 入口仍可用。
 
-本次网页设计调整没有更改 APK、更新清单、签名校验文件、App 源码或发布工作流。
+## 注意
 
-## 本地预览
-
-```sh
-python3 -m http.server 4173 --directory docs
-```
-
-访问 `http://localhost:4173/`。需要测试时，直接浏览器检查即可，不需要构建 Android App。
-
-## 本轮检查
-
-基线 `1cc0a6e`。Chromium/Playwright 验证了 320、360、390、640、768、1024、1440px 布局无横向溢出，且按 `/PushMi-Release/` 子路径解析资源。截图切换、页签键盘导航、FAQ 展开/关闭、实际剪贴板复制通过；浏览器实际下载的 APK 为 6,031,714 字节，SHA-256 与原有更新清单一致。
-
-清单获取失败、禁用 JavaScript、减少动画三种情况下的下载/内容退化检查通过；正常访问没有脚本异常或失败资源。对应机器检查结果见 [pages-browser-checks.json](.github/pages-browser-checks.json)。另已人工查看桌面、手机首屏及完整页面截图。
-
-浏览器交互检查针对本地同一套静态文件。当前环境中直接访问线上站点的 Chromium 遇到代理证书信任问题；没有关闭 TLS 验证。线上部署状态与资源内容另外通过 GitHub Pages 状态及遵循系统 CA 的 HTTPS 客户端核验。
+- APK 只存在于 Pages 部署产物和 Release 资产中，**不进入 git 历史**
+- `git add -A updates docs/dl` 一次 stage 全部变更（含旧校验文件的删除），避免残留旧版本文件
+- 环境 `github-pages` 的保护策略必须同时允许 `main` 分支和 `v*` tag，否则 release 触发的 deploy 会失败

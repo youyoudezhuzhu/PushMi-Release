@@ -109,7 +109,7 @@ jobs:
           source /tmp/rel/meta.env
           git config user.name "PushMi Pages Bot"
           git config user.email "pages-bot@pushmi.local"
-          git add -A updates docs/dl/SHA256SUMS-*.txt docs/dl/stable.json
+          git add -A updates docs/dl
           if [ -z "$(git status --porcelain)" ]; then
             echo "already in sync"
             exit 0

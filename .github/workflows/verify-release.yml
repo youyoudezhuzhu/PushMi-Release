@@ -1,18 +1,57 @@
 name: Verify release assets
+
 on:
   release:
     types: [published]
+
 permissions:
   contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check APK and SHA256SUMS presence
-        run: |
-          set -e
-          gh release view "$GITHUB_REF_NAME" --json assets --jq '.assets[].name'
-          echo "Release assets are checked manually for the first stable release."
+        with:
+          ref: main
+
+      - name: Download release assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/rel
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir /tmp/rel
+          ls -l /tmp/rel
+
+      - name: Verify APK SHA-256 against manifest and checksum file
+        run: |
+          set -euo pipefail
+          apk="$(find /tmp/rel -maxdepth 1 -name '*.apk' | head -n1)"
+          test -n "$apk" || { echo "::error::no APK asset"; exit 1; }
+          actual="$(sha256sum "$apk" | awk '{print $1}')"
+          manifest="$(python3 -c 'import json;print(json.load(open("/tmp/rel/update-manifest.json"))["sha256"])')"
+          sums="$(awk '{print $1}' /tmp/rel/SHA256SUMS-*.txt | head -n1)"
+          echo "apk      : $actual"
+          echo "manifest : $manifest"
+          echo "sums file: $sums"
+          [ "$actual" = "$manifest" ] || { echo "::error::APK sha does not match update-manifest.json"; exit 1; }
+          [ "$actual" = "$sums" ] || { echo "::error::APK sha does not match SHA256SUMS"; exit 1; }
+          echo "APK sha verified against manifest and checksum file"
+
+      - name: Verify manifest metadata
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          m = json.load(open('/tmp/rel/update-manifest.json'))
+          tag = os.environ['GITHUB_REF_NAME']
+          assert m['version_name'] in tag, f"version {m['version_name']} does not match tag {tag}"
+          assert int(m['version_code']) > 0
+          assert m['apk_url'].startswith('https://'), m['apk_url']
+          assert len(m['sha256']) == 64
+          print("manifest metadata OK:", m['version_name'], m['version_code'])
+          PY
+        env:
+          GITHUB_REF_NAME: ${{ github.event.release.tag_name }}
