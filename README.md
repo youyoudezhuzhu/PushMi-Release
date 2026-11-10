@@ -50,11 +50,11 @@ https://raw.githubusercontent.com/youyoudezhuzhu/PushMi-Release/main/updates/sta
 - 捕获手机媒体音频，局域网直连推送到一台或多台 MiPlay 音箱。
 - 多音箱同步、独立音量、静音、暂停/继续、停止。
 - 系统通知快捷控制；支持的系统可显示原生实时通知（Android 16+ Live Updates）。
-- PushMi Plus 永久授权；免费版同时最多 2 台音箱。
+- 默认同时最多 2 台音箱；PushMi Plus 可解除数量限制，永久授权。
 
-## 免费版与 Plus
+## 多音箱与 Plus
 
-- 免费版：同时最多 2 台音箱。
+- 默认同时最多 2 台音箱。
 - Plus：解除同时推送数量限制，永久授权；通过激活码绑定设备。授权与更新互不影响。
 
 ## 安装与更新

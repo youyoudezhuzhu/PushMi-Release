@@ -1,9 +1,9 @@
 'use strict';
 
 const screens = {
-  speakers: { src: 'assets/shot-speakers.webp', alt: '音箱页：扫描并选择局域网中的 MiPlay 音箱', caption: '音箱 · 扫描与选择', width: 720, height: 1202 },
-  home: { src: 'assets/shot-home.webp', alt: '首页：查看推送状态、暂停或静音，并选择音频采集范围', caption: '首页 · 推送与控制', width: 820, height: 1116 },
-  settings: { src: 'assets/shot-settings.webp', alt: '设置页：调整音质、延迟策略、后台运行与通知控制', caption: '设置 · 按你的习惯', width: 720, height: 1146 },
+  speakers: { src: 'assets/shot-speakers.webp', alt: '音箱页：查找并选择家里的小爱音箱', caption: '音箱 · 扫描与选择', width: 720, height: 1202 },
+  home: { src: 'assets/shot-home.webp', alt: '首页：查看播放状态、暂停或静音，并选择要传送的声音', caption: '首页 · 推送与控制', width: 820, height: 1116 },
+  settings: { src: 'assets/shot-settings.webp', alt: '设置页：调整音质、播放延迟和通知', caption: '设置 · 按你的习惯', width: 720, height: 1146 },
 };
 const tabs = [...document.querySelectorAll('[data-screen]')];
 const panel = document.querySelector('#screen-panel');
