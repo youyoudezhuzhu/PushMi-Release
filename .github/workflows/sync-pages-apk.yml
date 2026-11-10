@@ -1,8 +1,10 @@
 name: Sync latest APK to GitHub Pages
 
-# Runs automatically whenever a stable release is published in this repository,
-# and can be re-run manually. Keeps exactly ONE APK in docs/dl so the Pages site
-# never piles up, and rewrites both stable.json copies the app reads.
+# Runs whenever a stable release is published, and can be re-run manually.
+# Pages is deployed as an artifact (Settings → Pages → Source: GitHub Actions),
+# so the ~6 MB latest.apk is NOT committed to git: the repository history no
+# longer grows by one APK per release. Only the small stable.json / checksum
+# files are committed (the app reads stable.json from raw.githubusercontent).
 on:
   release:
     types: [published]
@@ -14,9 +16,11 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
-  group: sync-pages-apk
+  group: pages
   cancel-in-progress: false
 
 jobs:
@@ -57,7 +61,7 @@ jobs:
             --pattern 'update-manifest.json' --dir /tmp/rel
           python3 .github/scripts/write_meta.py /tmp/rel/update-manifest.json /tmp/rel/meta.env
 
-      - name: Sync APK into docs/dl
+      - name: Stage APK into the Pages artifact
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.rel.outputs.tag }}
@@ -79,9 +83,8 @@ jobs:
 
           python3 .github/scripts/patch_stable.py "$VERSION" "$VERSION_CODE" "$SHA256" "$TAG" "$apk_name" "${SOURCE_COMMIT:-}" "$(cat /tmp/rel/notes.md 2>/dev/null || true)"
 
-      # Keep exactly one public release: the tag just synced. Older release
-      # assets are what actually pile up (Pages keeps a single latest.apk), so
-      # they are removed automatically instead of being cleaned by hand.
+      # Keep exactly one public release: the tag just synced. Release assets are
+      # the only per-version copy now (Pages serves a single latest.apk).
       - name: Delete older releases and tags
         if: github.event_name == 'release'
         env:
@@ -100,32 +103,35 @@ jobs:
           echo "releases now:"
           gh release list --repo "$GITHUB_REPOSITORY" --limit 100
 
-      - name: Commit and push
+      - name: Commit stable.json and checksum (no APK)
         run: |
           set -euo pipefail
           source /tmp/rel/meta.env
           git config user.name "PushMi Pages Bot"
           git config user.email "pages-bot@pushmi.local"
-          # Pages is served from this branch, so latest.apk (~6 MB) must live in
-          # git. To stop the repository from growing by one APK per release, fold
-          # the previous sync commit into the new one: history keeps exactly one
-          # APK blob. Only the bot's own tip commit is rewritten; any newer human
-          # commit makes this a no-op and a normal push is used instead.
-          folded=0
-          if git log -1 --format=%s | grep -q '^pages: sync '; then
-            git reset --soft HEAD~1
-            folded=1
-            echo "folded previous sync commit"
-          fi
-          git add docs/dl updates/stable.json
+          git add -A updates docs/dl/SHA256SUMS-*.txt docs/dl/stable.json
           if [ -z "$(git status --porcelain)" ]; then
             echo "already in sync"
             exit 0
           fi
-          git commit -m "pages: sync ${VERSION} apk (auto)"
-          if [ "$folded" = "1" ]; then
-            git push --force-with-lease origin HEAD:main
-          else
-            git push origin HEAD:main
-          fi
-          echo "repository size hint: $(du -sh .git | cut -f1)"
+          git commit -m "pages: sync ${VERSION} metadata (auto)"
+          git push origin HEAD:main
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    needs: sync
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
