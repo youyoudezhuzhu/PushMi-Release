@@ -2,14 +2,14 @@
   "schema_version": 1,
   "channel": "stable",
   "published": true,
-  "version_name": "2.6.17",
-  "version_code": 56,
-  "apk_url": "https://youyoudezhuzhu.github.io/PushMi-Release/dl/latest.apk?v=56",
-  "sha256": "23d9125916a537221855b4a5ee561853c81943cd24752cc43cb99a21ce6afa14",
+  "version_name": "2.6.18",
+  "version_code": 59,
+  "apk_url": "https://youyoudezhuzhu.github.io/PushMi-Release/dl/latest.apk?v=59",
+  "sha256": "66afceade53fafd5324b526e7a29387a502287d7eb7bf7971d59306ff141f826",
   "signer_sha256": "9f97b2e8c1d254dde1878b8448e6840dbe968d9cb4f6c04c5a6694493cf5a28b",
-  "release_notes": "## PushMi 2.6.17（重新构建）\n\n- 修复「检查更新」偶发失败/耗时长：清单获取改为 Pages 优先、并行竞速，并且**最快源一返回就结束**\n  （之前会等最慢的候选超时，实测 4.4s；现在约 0.5s）。\n- 单次请求 4s 超时，整体上限 6s；诊断日志记录来源与耗时。\n- 版本号保持 2.6.17 / versionCode 56，覆盖上一版资产。\n- 其余内容不变：Pages 下载、多镜像兜底、MiPlay 文案、采集模式副标题、关于页 GitHub 链接。",
-  "notes": "## PushMi 2.6.17（重新构建）\n\n- 修复「检查更新」偶发失败/耗时长：清单获取改为 Pages 优先、并行竞速，并且**最快源一返回就结束**\n  （之前会等最慢的候选超时，实测 4.4s；现在约 0.5s）。\n- 单次请求 4s 超时，整体上限 6s；诊断日志记录来源与耗时。\n- 版本号保持 2.6.17 / versionCode 56，覆盖上一版资产。\n- 其余内容不变：Pages 下载、多镜像兜底、MiPlay 文案、采集模式副标题、关于页 GitHub 链接。",
+  "release_notes": "## PushMi 2.6.18\n\n安全与稳定性修复：\n\n- 授权：裸 HTTP 403（WAF/反代）不再误删本地凭证；撤销按服务端显式 code 处理；\n  本地有效凭证每 24 小时后台复核一次，服务端撤销可最终生效；撤销清理异常安全；\n  「恢复授权」补上应用签名校验；内核拒绝凭证时界面自动降级为免费版。\n- 设备码：异常/占位 Android ID 不再生成可碰撞的共享设备码；设备码不可用时不再发起激活/恢复。\n- 设备码展示：界面与复制改为可逆编码 PVD1-…，降低截图/工单直接泄露真实设备码的风险（客服可还原）。\n- 更新：清单抓取逐跳 HTTPS 校验 + 256 KiB 上限；Release 构建不再可能编入测试授权公钥。\n- 购买信息：修复「暂未开放」一直不恢复的问题（304 响应且本地缓存过期时改为无条件重取）。\n- 凭证时钟容差由 5 分钟放宽到 24 小时，避免手机时钟不准导致合法授权激活失败。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的 MiPlay 音箱。",
+  "notes": "## PushMi 2.6.18\n\n安全与稳定性修复：\n\n- 授权：裸 HTTP 403（WAF/反代）不再误删本地凭证；撤销按服务端显式 code 处理；\n  本地有效凭证每 24 小时后台复核一次，服务端撤销可最终生效；撤销清理异常安全；\n  「恢复授权」补上应用签名校验；内核拒绝凭证时界面自动降级为免费版。\n- 设备码：异常/占位 Android ID 不再生成可碰撞的共享设备码；设备码不可用时不再发起激活/恢复。\n- 设备码展示：界面与复制改为可逆编码 PVD1-…，降低截图/工单直接泄露真实设备码的风险（客服可还原）。\n- 更新：清单抓取逐跳 HTTPS 校验 + 256 KiB 上限；Release 构建不再可能编入测试授权公钥。\n- 购买信息：修复「暂未开放」一直不恢复的问题（304 响应且本地缓存过期时改为无条件重取）。\n- 凭证时钟容差由 5 分钟放宽到 24 小时，避免手机时钟不准导致合法授权激活失败。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的 MiPlay 音箱。",
   "published_at": "2026-11-09T07:50:00Z",
-  "apk_url_alt": "https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/v2.6.17/pushmi-2.6.17-release-signed.apk",
-  "source_commit": "e12602a6c4023a31070993c2d80e51fa90fb2d98"
+  "apk_url_alt": "https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/v2.6.18/pushmi-2.6.18-release-signed.apk",
+  "source_commit": "534ee3dc8b5bbbd9759f6a3270cd3138debdd5ed"
 }
