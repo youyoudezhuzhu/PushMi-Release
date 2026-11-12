@@ -2,14 +2,14 @@
   "schema_version": 1,
   "channel": "stable",
   "published": true,
-  "version_name": "2.6.19",
-  "version_code": 60,
-  "apk_url": "https://youyoudezhuzhu.github.io/PushMi-Release/dl/latest.apk?v=60",
-  "sha256": "98f3896bd9540d833994bffe959d6b711f6b5585ed52800ce9e9066a68a25964",
+  "version_name": "2.6.20",
+  "version_code": 64,
+  "apk_url": "https://youyoudezhuzhu.github.io/PushMi-Release/dl/latest.apk?v=64",
+  "sha256": "b75489174607f8199459301f48acca5d2c12cd597e379ec0a50c848981ff1c6b",
   "signer_sha256": "9f97b2e8c1d254dde1878b8448e6840dbe968d9cb4f6c04c5a6694493cf5a28b",
-  "release_notes": "## PushMi 2.6.19\n\n音频稳定性修复：\n\n- **修复灭屏/后台长时间推送时媒体时钟漂移**：播放捕获在屏幕关闭后可能静默少给帧，\n  之前会让音频时间线越推越落后（实测 2 分钟内累积到 4.6 秒且不恢复）。\n  现在会按墙钟补齐缺口（每 250ms 检查，缺口超过 85ms 才补，单次最多补 1 秒），\n  保证音箱时钟始终跟住实时音频。\n- 新增对应的单元测试与延迟分析文档。\n\n包含 2.6.18 的全部内容：安全专项修复（授权/设备码/更新/构建）、设备码展示改为可逆编码、\n购买信息 304 缓存修复、凭证时钟容差放宽。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的 MiPlay 音箱。",
-  "notes": "## PushMi 2.6.19\n\n音频稳定性修复：\n\n- **修复灭屏/后台长时间推送时媒体时钟漂移**：播放捕获在屏幕关闭后可能静默少给帧，\n  之前会让音频时间线越推越落后（实测 2 分钟内累积到 4.6 秒且不恢复）。\n  现在会按墙钟补齐缺口（每 250ms 检查，缺口超过 85ms 才补，单次最多补 1 秒），\n  保证音箱时钟始终跟住实时音频。\n- 新增对应的单元测试与延迟分析文档。\n\n包含 2.6.18 的全部内容：安全专项修复（授权/设备码/更新/构建）、设备码展示改为可逆编码、\n购买信息 304 缓存修复、凭证时钟容差放宽。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的 MiPlay 音箱。",
+  "release_notes": "## PushMi 2.6.20\n\n**播放延迟大幅降低 + 音频时间轴稳定性修复**\n\n- 发送端改为比呈现时刻提前发送（发送提前量），音箱不再自己膨胀抖动缓冲：\n  - 均衡档实测 893ms → 206ms\n  - 低延迟档实测 898ms → 52ms\n  - 单音箱实测 121ms\n  - 长时间播放不再越放越延迟\n- 修复多音箱组 TIME_OFFSET 失败未重试导致的错位风险（失败不再被当成功，带退避重试与 5 秒恢复期限）\n- 修复捕获积压丢弃与补静音重复推进时间轴的问题\n- 修复编码队列丢帧未计入输出时间轴、导致 PTS 永久落后的隐患\n- 音频时间轴遥测改为按编码输出计算\n\n**界面逻辑修正**\n- 音箱页 = 选择要管理的音箱；首页与快捷控制 = 同一份推送勾选，两处实时同步\n- 在首页或快捷控制取消勾选只停止推送该音箱，不会把它从音箱页移除\n\n包含 2.6.19 的全部安全修复与购买信息修复。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的 MiPlay 音箱。",
+  "notes": "## PushMi 2.6.20\n\n**播放延迟大幅降低 + 音频时间轴稳定性修复**\n\n- 发送端改为比呈现时刻提前发送（发送提前量），音箱不再自己膨胀抖动缓冲：\n  - 均衡档实测 893ms → 206ms\n  - 低延迟档实测 898ms → 52ms\n  - 单音箱实测 121ms\n  - 长时间播放不再越放越延迟\n- 修复多音箱组 TIME_OFFSET 失败未重试导致的错位风险（失败不再被当成功，带退避重试与 5 秒恢复期限）\n- 修复捕获积压丢弃与补静音重复推进时间轴的问题\n- 修复编码队列丢帧未计入输出时间轴、导致 PTS 永久落后的隐患\n- 音频时间轴遥测改为按编码输出计算\n\n**界面逻辑修正**\n- 音箱页 = 选择要管理的音箱；首页与快捷控制 = 同一份推送勾选，两处实时同步\n- 在首页或快捷控制取消勾选只停止推送该音箱，不会把它从音箱页移除\n\n包含 2.6.19 的全部安全修复与购买信息修复。\n\n要求：Android 10 (API 29) 及以上，同一 Wi-Fi 内的 MiPlay 音箱。",
   "published_at": "2026-11-09T07:50:00Z",
-  "apk_url_alt": "https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/v2.6.19/pushmi-2.6.19-release-signed.apk",
-  "source_commit": "e399d5dd70afc1ee0fc59b3cdc0c4d272cb36882"
+  "apk_url_alt": "https://github.com/youyoudezhuzhu/PushMi-Release/releases/download/v2.6.20/pushmi-2.6.20-release-signed.apk",
+  "source_commit": "4402cf9612579e307ffe3f7d459701665a12aba1"
 }
