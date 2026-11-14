@@ -94,3 +94,58 @@ copyButton.addEventListener('click', async () => {
 });
 
 loadRelease();
+loadDownloadCount();
+
+// Release download counts. GitHub's public API reports per-asset counters and
+// allows browser CORS; failures simply leave the element hidden. Cached for
+// ten minutes to stay well inside the unauthenticated API rate limit.
+async function loadDownloadCount() {
+  const elements = [...document.querySelectorAll('[data-download-count]')];
+  if (!elements.length) return;
+  const cacheKey = 'pushmi-download-count-v1';
+  const render = (total) => {
+    if (!Number.isFinite(total) || total < 0) return;
+    for (const element of elements) {
+      element.textContent = `累计下载 ${total.toLocaleString('zh-CN')} 次`;
+      element.hidden = false;
+    }
+  };
+  try {
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Date.now() - parsed.t < 10 * 60 * 1000) {
+        render(parsed.total);
+        return;
+      }
+    }
+  } catch {
+    // Ignore unavailable session storage.
+  }
+  try {
+    const response = await fetch(
+      'https://api.github.com/repos/youyoudezhuzhu/PushMi-Release/releases?per_page=100',
+      { headers: { Accept: 'application/vnd.github+json' } },
+    );
+    if (!response.ok) throw new Error('download counts unavailable');
+    const releases = await response.json();
+    if (!Array.isArray(releases)) return;
+    let total = 0;
+    for (const release of releases) {
+      for (const asset of release.assets || []) {
+        if (typeof asset.name === 'string' && /\.apk$/i.test(asset.name) &&
+            Number.isFinite(asset.download_count)) {
+          total += asset.download_count;
+        }
+      }
+    }
+    try {
+      sessionStorage.setItem(cacheKey, JSON.stringify({ t: Date.now(), total }));
+    } catch {
+      // Storage may be disabled; rendering still works.
+    }
+    render(total);
+  } catch {
+    // Keep the count hidden when the API is unreachable or rate limited.
+  }
+}
