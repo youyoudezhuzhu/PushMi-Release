@@ -103,6 +103,37 @@ jobs:
           echo "releases now:"
           gh release list --repo "$GITHUB_REPOSITORY" --limit 100
 
+      # Download counts are baked into a same-origin JSON file: api.github.com
+      # is unreachable on some networks (notably mainland China), so the page
+      # must not depend on a browser call to it.
+      - name: Record release download counts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p docs/dl
+          python3 - <<'PYCOUNT'
+          import datetime, json, os, subprocess
+          raw = subprocess.check_output(
+              ["gh", "api", f"repos/{os.environ['GITHUB_REPOSITORY']}/releases?per_page=100"],
+              text=True,
+          )
+          releases = json.loads(raw)
+          total = sum(
+              asset.get("download_count", 0)
+              for release in releases
+              for asset in release.get("assets", [])
+              if str(asset.get("name", "")).lower().endswith(".apk")
+          )
+          data = {
+              "total": total,
+              "updated_at": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+          }
+          with open("docs/dl/download-count.json", "w", encoding="utf-8") as handle:
+              json.dump(data, handle, separators=(",", ":"))
+          print("download-count.json:", data)
+          PYCOUNT
+
       - name: Commit stable.json and checksum (no APK)
         run: |
           set -euo pipefail

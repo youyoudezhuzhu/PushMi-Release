@@ -122,6 +122,25 @@ async function loadDownloadCount() {
   } catch {
     // Ignore unavailable session storage.
   }
+  // Preferred source: a same-origin snapshot written by the Pages workflow, so
+  // the count works even where api.github.com is unreachable.
+  try {
+    const response = await fetch('dl/download-count.json', { cache: 'no-cache' });
+    if (response.ok) {
+      const data = await response.json();
+      if (Number.isFinite(data.total) && data.total >= 0) {
+        try {
+          sessionStorage.setItem(cacheKey, JSON.stringify({ t: Date.now(), total: data.total }));
+        } catch {
+          // Storage may be disabled; rendering still works.
+        }
+        render(data.total);
+        return;
+      }
+    }
+  } catch {
+    // Fall through to the public API.
+  }
   try {
     const response = await fetch(
       'https://api.github.com/repos/youyoudezhuzhu/PushMi-Release/releases?per_page=100',
