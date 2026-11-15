@@ -106,8 +106,7 @@ async function loadDownloadCount() {
   const render = (total) => {
     if (!Number.isFinite(total) || total < 0) return;
     for (const element of elements) {
-      element.textContent = `累计下载 ${total.toLocaleString('zh-CN')} 次`;
-      element.hidden = false;
+      element.textContent = total.toLocaleString('zh-CN');
     }
   };
   try {
